@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 函數與參數練習題</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            height: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: #4ade80;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        .question-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .question-number {
+            background: #667eea;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .score-display {
+            background: #10b981;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .question-text {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option {
+            padding: 14px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+        .option:hover:not(.disabled) {
+            border-color: #667eea;
+            background: #f8fafc;
+        }
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+        }
+        .option.wrong {
+            border-color: #ef4444;
+            background: #fee2e2;
+        }
+        .option.disabled {
+            cursor: default;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: #667eea;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background: #5568d3;
+        }
+        .btn:disabled {
+            background: #ccc;
+            cursor: default;
+        }
+        .result-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .result-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+        .result-score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .result-text {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .restart-btn {
+            background: #10b981;
+        }
+        .restart-btn:hover {
+            background: #059669;
+        }
+        .explanation {
+            margin-top: 12px;
+            padding: 12px;
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+            color: #475569;
+            display: none;
+        }
+        .explanation.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JavaScript 函數與參數練習題</h1>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div id="quizContainer"></div>
+        <div id="resultContainer" style="display: none;"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "以下哪個是函數宣告式（Function Declaration）的正確語法？",
+                options: [
+                    "const myFunc = function() {}",
+                    "function myFunc() {}",
+                    "let myFunc = () => {}",
+                    "var myFunc = new Function()"
+                ],
+                answer: 1,
+                explanation: "function myFunc() {} 是函數宣告式的標準語法，會被 hoisting，可在其他程式碼之前呼叫。"
+            },
+            {
+                question: "箭頭函數（Arrow Function）與傳統函數的主要差異是什麼？",
+                code: "const obj = {\n  value: 10,\n  regular: function() { return this.value; },\n  arrow: () => { return this.value; }\n};",
+                options: [
+                    "Arrow function 執行速度更快",
+                    "Arrow function 有自己的 this 綁定",
+                    "Arrow function 沒有自己的 this，會繼承外部的 this",
+                    "兩者沒有任何差異"
+                ],
+                answer: 2,
+                explanation: "Arrow function 沒有自己的 this 綁定，會继承定義時的外層 this 值。"
+            },
+            {
+                question: "Rest Parameters（其餘參數）使用哪個符號？",
+                options: [
+                    "@",
+                    "#",
+                    "...",
+                    "&"
+                ],
+                answer: 2,
+                explanation: "... 是 rest parameters 語法，可將多個參數收集為一個陣列，例如：function(...args)。"
+            },
+            {
+                question: "什麼是 Default Parameters（預設參數）？",
+                code: "function greet(name = '訪客') {\n  return '你好，' + name;\n}\ngreet();",
+                options: [
+                    "當呼叫函數時未傳遞參數，參數會使用預設值",
+                    "參數只能有一個預設值",
+                    "預設參數必須是數字類型",
+                    "預設參數會覆蓋所有傳入值"
+                ],
+                answer: 0,
+                explanation: "Default Parameters 允許在參數未傳遞或傳入 undefined 時使用預設值。上例中 greet() 會回傳「你好，訪客」。"
+            },
+            {
+                question: "以下程式碼的輸出是什麼？",
+                code: "function sum(a, b) {\n  return a + b;\n}\nconsole.log(sum(2, 3, 5, 7));",
+                options: [
+                    "5",
+                    "7",
+                    "17",
+                    "undefined"
+                ],
+                answer: 0,
+                explanation: "函數只會使用前兩個參數 a=2 和 b=3，其餘參數會被忽略，所以輸出 5。"
+            },
+            {
+                question: "arguments 物件在箭頭函數中可以使用嗎？",
+                code: "const arrowFunc = () => {\n  console.log(arguments);\n};\narrowFunc(1, 2, 3);",
+                options: [
+                    "可以正常使用",
+                    "不可以，會報錯",
+                    "不可以，箭頭函數沒有 arguments 物件",
+                    "取決於嚴格模式"
+                ],
+                answer: 2,
+                explanation: "Arrow function 沒有自己的 arguments 物件，也沒有 super 和 new.target。"
+            },
+            {
+                question: "Callback Function（回調函數）是什麼？",
+                options: [
+                    "一個在函數外部執行的函數",
+                    "一個作為參數傳遞給另一個函數的函數",
+                    "一個會自動重複執行的函數",
+                    "一個必須有回傳值的函數"
+                ],
+                answer: 1,
+                explanation: "Callback function 是作為參數傳遞給另一個函數的函數，會在適當時機被呼叫執行，例如 setTimeout、陣列的 map/filter。"
+            },
+            {
+                question: "IIFE（立即呼叫函數表達式）的用途是什麼？",
+                code: "(function() {\n  var local = '只在這裡有效';\n  console.log(local);\n})();",
+                options: [
+                    "提高函數執行效能",
+                    "建立私有作用域，防止變數污染全域",
+                    "讓函數可以接受參數",
+                    "使函數可以被重複呼叫"
+                ],
+                answer: 1,
+                explanation: "IIFE 會立即執行，可用來建立封閉的作用域，避免內部變數污染全域環境。"
+            },
+            {
+                question: "以下程式碼輸出什麼？",
+                code: "function test(a, b = a * 2) {\n  return [a, b];\n}\nconsole.log(test(5));",
+                options: [
+                    "[5, undefined]",
+                    "[5, 10]",
+                    "[5, NaN]",
+                    "[5, 5]"
+                ],
+                answer: 1,
+                explanation: "b 使用 a 作為預設值計算，所以 b = 5 * 2 = 10，輸出 [5, 10]。"
+            },
+            {
+                question: "純函數（Pure Function）的定義是什麼？",
+                options: [
+                    "使用箭頭語法寫的函數",
+                    "有明確回傳值的函數",
+                    "相同輸入總是產生相同輸出，且不產生副作用",
+                    "沒有使用任何參數的函數"
+                ],
+                answer: 2,
+                explanation: "Pure Function 相同輸入永遠產生相同輸出，且不改變外部狀態或產生副作用（如修改全域變數、API 呼叫等）。"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = [];
+
+        function renderQuestion(index) {
+            const q = questions[index];
+            const quizContainer = document.getElementById('quizContainer');
+            
+            const progress = ((index) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            let codeHtml = q.code ? `<div class="code-block">${q.code}</div>` : '';
+            
+            let optionsHtml = q.options.map((opt, i) => 
+                `<div class="option" data-index="${i}" onclick="selectOption(${i})">${opt}</div>`
+            ).join('');
+
+            quizContainer.innerHTML = `
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">第 ${index + 1} 題</span>
+                        <span class="score-display">得分：${score} / ${questions.length}</span>
+                    </div>
+                    <div class="question-text">${q.question}</div>
+                    ${codeHtml}
+                    <div class="options">${optionsHtml}</div>
+                    <div class="explanation" id="explanation"></div>
+                    ${index < questions.length - 1 
+                        ? `<button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>下一題</button>`
+                        : `<button class="btn" id="nextBtn" onclick="showResult()" disabled>查看結果</button>`
+                    }
+                </div>
+            `;
+        }
+
+        function selectOption(index) {
+            if (answered[currentQuestion] !== undefined) return;
+            
+            answered[currentQuestion] = index;
+            const q = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === q.answer) {
+                    opt.classList.add('correct');
+                } else if (i === index && index !== q.answer) {
+                    opt.classList.add('wrong');
+                }
+            });
+
+            if (index === q.answer) {
+                score++;
+            }
+
+            const explanation = document.getElementById('explanation');
+            explanation.innerHTML = `<strong>解析：</strong>${q.explanation}`;
+            explanation.classList.add('show');
+
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            renderQuestion(currentQuestion);
+        }
+
+        function showResult() {
+            document.getElementById('progressFill').style.width = '100%';
+            document.getElementById('quizContainer').innerHTML = '';
+            
+            const resultContainer = document.getElementById('resultContainer');
+            resultContainer.style.display = 'block';
+            
+            let icon, message;
+            if (score === questions.length) {
+                icon = '🎉';
+                message = '太棒了！全部答對！';
+            } else if (score >= questions.length * 0.7) {
+                icon = '👏';
+                message = '很不錯！繼續保持！';
+            } else if (score >= questions.length * 0.5) {
+                icon = '💪';
+                message = '還可以喔！再加油！';
+            } else {
+                icon = '📚';
+                message = '建議再複習一下基礎概念';
+            }
+
+            resultContainer.innerHTML = `
+                <div class="result-card">
+                    <div class="result-icon">${icon}</div>
+                    <div class="result-score">${score} / ${questions.length}</div>
+                    <div class="result-text">${message}</div>
+                    <button class="btn restart-btn" onclick="restart()">重新挑戰</button>
+                </div>
+            `;
+        }
+
+        function restart() {
+            currentQuestion = 0;
+            score = 0;
+            answered = [];
+            document.getElementById('resultContainer').style.display = 'none';
+            renderQuestion(0);
+        }
+
+        renderQuestion(0);
+    </script>
+</body>
+</html>
