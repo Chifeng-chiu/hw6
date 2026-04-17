@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 陣列方法練習題</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            height: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: #4ade80;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        .question-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .question-number {
+            background: #11998e;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .score-display {
+            background: #10b981;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .question-text {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option {
+            padding: 14px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+        .option:hover:not(.disabled) {
+            border-color: #11998e;
+            background: #f8fafc;
+        }
+        .option.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+        }
+        .option.wrong {
+            border-color: #ef4444;
+            background: #fee2e2;
+        }
+        .option.disabled {
+            cursor: default;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: #11998e;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background: #0d7d6f;
+        }
+        .btn:disabled {
+            background: #ccc;
+            cursor: default;
+        }
+        .result-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .result-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+        .result-score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #11998e;
+            margin-bottom: 10px;
+        }
+        .result-text {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .restart-btn {
+            background: #10b981;
+        }
+        .restart-btn:hover {
+            background: #059669;
+        }
+        .explanation {
+            margin-top: 12px;
+            padding: 12px;
+            background: #f0f9ff;
+            border-left: 4px solid #11998e;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+            color: #475569;
+            display: none;
+        }
+        .explanation.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JavaScript 陣列方法練習題</h1>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div id="quizContainer"></div>
+        <div id="resultContainer" style="display: none;"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "關於 JavaScript 陣列方法（forEach、map、filter、reduce），以下哪個描述是正確的？",
+                code: "const arr = [1, 2, 3, 4, 5];\narr.forEach(item => console.log(item));\narr.map(item => item * 2);\narr.filter(item => item > 2);\narr.reduce((acc, item) => acc + item, 0);",
+                options: [
+                    "會改變原始陣列 arr 的內容",
+                    "不會改變原始陣列 arr 的內容",
+                    "只有 forEach 不會改變原始陣列",
+                    "只有 reduce 不會改變原始陣列"
+                ],
+                answer: 1,
+                explanation: "forEach、map、filter、reduce 都不會改變原始陣列，它們會產生新陣列（forEach 無回傳值，reduce 回傳單一值）。"
+            },
+            {
+                question: "關於 Arrow Function 與 this，以下程式碼的輸出是什麼？",
+                code: "const me = {\n  name: 'Amy',\n  hi: () => {\n    console.log(this.name);\n  }\n};\nme.hi();",
+                options: [
+                    "Amy",
+                    "undefined",
+                    "",
+                    ""
+                ],
+                answer: 1,
+                explanation: "Arrow function 沒有自己的 this，會繼承外層的 this。在物件中使用箭頭函數時，this 指向的是外層的 scope，而非物件本身，所以無法取得物件內的 name 屬性，輸出 undefined。"
+            },
+            {
+                question: "關於 map() 與 filter() 方法，以下哪個描述是正確的？",
+                code: "const numbers = [1, 2, 3, 4, 5];\nconst doubled = numbers.map(n => n * 2);\nconst evens = numbers.filter(n => n % 2 === 0);",
+                options: [
+                    "會產生新陣列",
+                    "會修改原始陣列",
+                    "map() 不會產生新陣列",
+                    "filter() 會回傳單一值"
+                ],
+                answer: 0,
+                explanation: "map() 會產生一個新陣列，每個元素為原元素經過處理後的結果；filter() 會產生一個新陣列，包含通過測試的元素。兩者都不會修改原始陣列。"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = [];
+
+        function renderQuestion(index) {
+            const q = questions[index];
+            const quizContainer = document.getElementById('quizContainer');
+            
+            const progress = ((index) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            let codeHtml = q.code ? `<div class="code-block">${q.code}</div>` : '';
+            
+            let optionsHtml = q.options.map((opt, i) => 
+                `<div class="option" data-index="${i}" onclick="selectOption(${i})">${opt}</div>`
+            ).join('');
+
+            quizContainer.innerHTML = `
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">第 ${index + 1} 題</span>
+                        <span class="score-display">得分：${score} / ${questions.length}</span>
+                    </div>
+                    <div class="question-text">${q.question}</div>
+                    ${codeHtml}
+                    <div class="options">${optionsHtml}</div>
+                    <div class="explanation" id="explanation"></div>
+                    ${index < questions.length - 1 
+                        ? `<button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>下一題</button>`
+                        : `<button class="btn" id="nextBtn" onclick="showResult()" disabled>查看結果</button>`
+                    }
+                </div>
+            `;
+        }
+
+        function selectOption(index) {
+            if (answered[currentQuestion] !== undefined) return;
+            
+            answered[currentQuestion] = index;
+            const q = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === q.answer) {
+                    opt.classList.add('correct');
+                } else if (i === index && index !== q.answer) {
+                    opt.classList.add('wrong');
+                }
+            });
+
+            if (index === q.answer) {
+                score++;
+            }
+
+            const explanation = document.getElementById('explanation');
+            explanation.innerHTML = `<strong>解析：</strong>${q.explanation}`;
+            explanation.classList.add('show');
+
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            renderQuestion(currentQuestion);
+        }
+
+        function showResult() {
+            document.getElementById('progressFill').style.width = '100%';
+            document.getElementById('quizContainer').innerHTML = '';
+            
+            const resultContainer = document.getElementById('resultContainer');
+            resultContainer.style.display = 'block';
+            
+            let icon, message;
+            if (score === questions.length) {
+                icon = '🎉';
+                message = '太棒了！全部答對！';
+            } else if (score >= questions.length * 0.7) {
+                icon = '👏';
+                message = '很不錯！繼續保持！';
+            } else if (score >= questions.length * 0.5) {
+                icon = '💪';
+                message = '還可以喔！再加油！';
+            } else {
+                icon = '📚';
+                message = '建議再複習一下基礎概念';
+            }
+
+            resultContainer.innerHTML = `
+                <div class="result-card">
+                    <div class="result-icon">${icon}</div>
+                    <div class="result-score">${score} / ${questions.length}</div>
+                    <div class="result-text">${message}</div>
+                    <button class="btn restart-btn" onclick="restart()">重新挑戰</button>
+                </div>
+            `;
+        }
+
+        function restart() {
+            currentQuestion = 0;
+            score = 0;
+            answered = [];
+            document.getElementById('resultContainer').style.display = 'none';
+            renderQuestion(0);
+        }
+
+        renderQuestion(0);
+    </script>
+</body>
+</html>
