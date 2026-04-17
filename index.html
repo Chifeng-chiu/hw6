@@ -189,120 +189,123 @@
     <script>
         const questions = [
             {
-                question: "以下哪個是函數宣告式（Function Declaration）的正確語法？",
-                options: [
-                    "const myFunc = function() {}",
-                    "function myFunc() {}",
-                    "let myFunc = () => {}",
-                    "var myFunc = new Function()"
-                ],
-                answer: 1,
-                explanation: "function myFunc() {} 是函數宣告式的標準語法，會被 hoisting，可在其他程式碼之前呼叫。"
-            },
-            {
-                question: "箭頭函數（Arrow Function）與傳統函數的主要差異是什麼？",
+                question: "關於 Arrow Function，以下哪個描述是正確的？",
                 code: "const obj = {\n  value: 10,\n  regular: function() { return this.value; },\n  arrow: () => { return this.value; }\n};",
                 options: [
-                    "Arrow function 執行速度更快",
-                    "Arrow function 有自己的 this 綁定",
-                    "Arrow function 沒有自己的 this，會繼承外部的 this",
-                    "兩者沒有任何差異"
-                ],
-                answer: 2,
-                explanation: "Arrow function 沒有自己的 this 綁定，會继承定義時的外層 this 值。"
-            },
-            {
-                question: "Rest Parameters（其餘參數）使用哪個符號？",
-                options: [
-                    "@",
-                    "#",
-                    "...",
-                    "&"
-                ],
-                answer: 2,
-                explanation: "... 是 rest parameters 語法，可將多個參數收集為一個陣列，例如：function(...args)。"
-            },
-            {
-                question: "什麼是 Default Parameters（預設參數）？",
-                code: "function greet(name = '訪客') {\n  return '你好，' + name;\n}\ngreet();",
-                options: [
-                    "當呼叫函數時未傳遞參數，參數會使用預設值",
-                    "參數只能有一個預設值",
-                    "預設參數必須是數字類型",
-                    "預設參數會覆蓋所有傳入值"
-                ],
-                answer: 0,
-                explanation: "Default Parameters 允許在參數未傳遞或傳入 undefined 時使用預設值。上例中 greet() 會回傳「你好，訪客」。"
-            },
-            {
-                question: "以下程式碼的輸出是什麼？",
-                code: "function sum(a, b) {\n  return a + b;\n}\nconsole.log(sum(2, 3, 5, 7));",
-                options: [
-                    "5",
-                    "7",
-                    "17",
-                    "undefined"
-                ],
-                answer: 0,
-                explanation: "函數只會使用前兩個參數 a=2 和 b=3，其餘參數會被忽略，所以輸出 5。"
-            },
-            {
-                question: "arguments 物件在箭頭函數中可以使用嗎？",
-                code: "const arrowFunc = () => {\n  console.log(arguments);\n};\narrowFunc(1, 2, 3);",
-                options: [
-                    "可以正常使用",
-                    "不可以，會報錯",
-                    "不可以，箭頭函數沒有 arguments 物件",
-                    "取決於嚴格模式"
-                ],
-                answer: 2,
-                explanation: "Arrow function 沒有自己的 arguments 物件，也沒有 super 和 new.target。"
-            },
-            {
-                question: "Callback Function（回調函數）是什麼？",
-                options: [
-                    "一個在函數外部執行的函數",
-                    "一個作為參數傳遞給另一個函數的函數",
-                    "一個會自動重複執行的函數",
-                    "一個必須有回傳值的函數"
+                    "Arrow function 有自己的 this",
+                    "Arrow function 沒有自己的 this",
+                    "兩者 this 綁定完全相同",
+                    "Arrow function 的 this 是動態的"
                 ],
                 answer: 1,
-                explanation: "Callback function 是作為參數傳遞給另一個函數的函數，會在適當時機被呼叫執行，例如 setTimeout、陣列的 map/filter。"
+                explanation: "Arrow function 沒有自己的 this 綁定，會繼承外層的 this 值。"
             },
             {
-                question: "IIFE（立即呼叫函數表達式）的用途是什麼？",
+                question: "關於 Default Parameters（預設參數），以下哪個描述是正確的？",
+                code: "function greet(name = '訪客') {\n  return '你好，' + name;\n}",
+                options: [
+                    "當呼叫函式未傳遞參數時，參數使用預設值",
+                    "預設參數可以修改傳入的引數",
+                    "預設參數只能在最後一個參數使用",
+                    "預設參數不能與 undefined 比較"
+                ],
+                answer: 0,
+                explanation: "Default Parameters 允許在參數未傳遞或傳入 undefined 時使用預設值。"
+            },
+            {
+                question: "關於 Rest Parameters（其餘參數），以下哪個描述是正確的？",
+                options: [
+                    "用於展開陣列或物件",
+                    "收集其餘傳入的參數形成一個陣列",
+                    "只能用於物件的屬性",
+                    "必須放在參數的最前面"
+                ],
+                answer: 1,
+                explanation: "Rest Parameters 使用 ... 語法，可將多個參數收集為一個陣列。"
+            },
+            {
+                question: "關於 Spread Operator 和 Rest Parameters，以下哪個描述是正確的？",
+                code: "const arr1 = [1, 2, 3];\nconst arr2 = [...arr1, 4, 5];",
+                options: [
+                    "兩者語法完全相同但用途相反",
+                    "Rest Parameters 用於解構",
+                    "Spread Operator 用於合併陣列",
+                    "兩者都是用於定義函式參數"
+                ],
+                answer: 0,
+                explanation: "兩者都使用 ... 語法，但 Rest Parameters 收集參數，Spread Operator 展開陣列/物件。"
+            },
+            {
+                question: "關於 Hoisting（提升），以下哪個描述是正確的？",
+                code: "console.log(add(2, 3));\n\nfunction add(a, b) {\n  return a + b;\n}",
+                options: [
+                    "函式陳述式可以被提升",
+                    "函式表達式可以被完全提升",
+                    "變數宣告不可以被提升",
+                    "提升會改變程式碼的執行順序"
+                ],
+                answer: 0,
+                explanation: "函式陳述式會被提升到作用域頂部，可以在宣告前呼叫。"
+            },
+            {
+                question: "關於 Pure Function（純函數），以下哪個描述是正確的？",
+                code: "function add(a, b) {\n  return a + b;\n}",
+                options: [
+                    "相同輸入產生相同輸出，且不改變外在狀態",
+                    "使用箭頭語法撰寫的函式",
+                    "有明確回傳值的函式",
+                    "不使用任何參數的函式"
+                ],
+                answer: 0,
+                explanation: "Pure Function 相同輸入永遠產生相同輸出，且不改變外部狀態或產生副作用。"
+            },
+            {
+                question: "關於 Callback Function（回調函數），以下哪個描述是正確的？",
+                code: "setTimeout(function() {\n  console.log('延遲執行');\n}, 1000);",
+                options: [
+                    "將函式當作參數傳入另一個函式",
+                    "在函式外部執行的函式",
+                    "會自動重複執行的函式",
+                    "必須有回傳值的函式"
+                ],
+                answer: 0,
+                explanation: "Callback function 是作為參數傳遞給另一個函數的函數，會在適當時機被呼叫執行。"
+            },
+            {
+                question: "關於 Closure（閉包），以下哪個描述是正確的？",
+                code: "function outer() {\n  let count = 0;\n  return function inner() {\n    count++;\n    return count;\n  };\n}",
+                options: [
+                    "函式可以記住並存取其建立時的作用域",
+                    "閉包會建立新的全域變數",
+                    "閉包只能用於物件導向程式設計",
+                    "閉包會自動釋放記憶體"
+                ],
+                answer: 0,
+                explanation: "Closure 是函式能夠記住並存取其建立時作用域的變數的功能。"
+            },
+            {
+                question: "關於 IIFE（立即呼叫函式表達式），以下哪個描述是正確的？",
                 code: "(function() {\n  var local = '只在這裡有效';\n  console.log(local);\n})();",
                 options: [
-                    "提高函數執行效能",
-                    "建立私有作用域，防止變數污染全域",
-                    "讓函數可以接受參數",
-                    "使函數可以被重複呼叫"
+                    "建立封閉作用域，避免全域變數污染",
+                    "提高函式執行效能",
+                    "讓函式可以被重複呼叫",
+                    "使函式可以接受多個參數"
                 ],
-                answer: 1,
+                answer: 0,
                 explanation: "IIFE 會立即執行，可用來建立封閉的作用域，避免內部變數污染全域環境。"
             },
             {
-                question: "以下程式碼輸出什麼？",
-                code: "function test(a, b = a * 2) {\n  return [a, b];\n}\nconsole.log(test(5));",
+                question: "關於函式作用域與閉包，以下程式碼輸出什麼？",
+                code: "function counter() {\n  let count = 0;\n  return {\n    increment: function() { count++; },\n    getCount: function() { return count; }\n  };\n}\nconst c = counter();\nc.increment();\nc.increment();\nconsole.log(c.getCount());",
                 options: [
-                    "[5, undefined]",
-                    "[5, 10]",
-                    "[5, NaN]",
-                    "[5, 5]"
-                ],
-                answer: 1,
-                explanation: "b 使用 a 作為預設值計算，所以 b = 5 * 2 = 10，輸出 [5, 10]。"
-            },
-            {
-                question: "純函數（Pure Function）的定義是什麼？",
-                options: [
-                    "使用箭頭語法寫的函數",
-                    "有明確回傳值的函數",
-                    "相同輸入總是產生相同輸出，且不產生副作用",
-                    "沒有使用任何參數的函數"
+                    "0",
+                    "1",
+                    "2",
+                    "undefined"
                 ],
                 answer: 2,
-                explanation: "Pure Function 相同輸入永遠產生相同輸出，且不改變外部狀態或產生副作用（如修改全域變數、API 呼叫等）。"
+                explanation: "閉包讓 inner functions 可以存取並修改 outer function 的 count 變數，所以輸出 2。"
             }
         ];
 
